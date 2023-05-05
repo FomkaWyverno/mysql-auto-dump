@@ -35,16 +35,20 @@ public class MySQLBackupTask extends TimerTask {
     public void run() {
         System.out.println("Start backup!");
 
+        String backup = getBackup();
+
+        if (backup.isEmpty()) {
+            System.out.println("Backup is empty!!");
+            return;
+        }
+
         List<File> filesBackup = this.getBackupFiles();
         System.out.println(filesBackup);
 
         filesBackup.sort(new ComparatorFile());
-
         renameFilesBackup(filesBackup);
 
         File backupFile = new File(this.directory_backup + "\\" + this.file_name_backup + "1.sql");
-
-        String backup = getBackup();
 
         try (BufferedWriter writer = Files.newBufferedWriter(backupFile.toPath())) {
             System.out.println("Start write backup");
@@ -109,7 +113,6 @@ public class MySQLBackupTask extends TimerTask {
         try {
             Process process = pb.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            process.waitFor();
 
             StringBuilder result = new StringBuilder();
             String line;
@@ -118,6 +121,7 @@ public class MySQLBackupTask extends TimerTask {
             }
 
             reader.close();
+            process.waitFor();
             return result.toString();
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

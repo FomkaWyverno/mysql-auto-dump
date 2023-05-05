@@ -22,7 +22,7 @@ public class Main {
                     new MySQLBackupCommand(config.getUser(), config.getPassword(), config.getDatabase(), config.getDocker_container());
 
             timer.schedule(new MySQLBackupTask(mySQLBackupCommand, Paths.get(config.getDirectory_backup()), config.getFile_backup(),config.getMax_backup()),
-                    TimeUnit.SECONDS.toMillis(30),TimeUnit.MINUTES.toMillis(config.getRepeat_interval()));
+                    TimeUnit.MINUTES.toMillis(3),TimeUnit.MINUTES.toMillis(config.getRepeat_interval()));
 
         } catch (NotCorrectValueInPropertiesException e) {
             System.out.println(e.getMessage());
